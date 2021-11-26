@@ -50,6 +50,22 @@ app.delete('/api/registro/:id', async(request, response) => {
 
 /*********************  PLAZAS  ******************/
 
+app.get('/api/plazas', async(request, response) => {
+    let plazas = await plazasCtrl.listar();
+    response.status(200).json(plazas);
+});
+
+app.post('/api/plazas', async(request, response) => {
+    const plazas = request.body;
+    try {
+        await plazasCtrl.insertar(plazas);
+        response.status(200).json(plazas);
+    } catch (error) {
+        console.log(error);
+        response.status(400).send(error);
+    }
+});
+
 app.put('/api/plazas', async(request, response) => {
     const plaza = request.body;
     try {
@@ -59,6 +75,13 @@ app.put('/api/plazas', async(request, response) => {
         console.log(error);
         response.status(400).send(error);
     }
+});
+
+app.delete('/api/plazas/:id', async(request, response) => {
+    let id = request.params.id
+    console.log(id);
+    await plazasCtrl.eliminar(id);
+    response.status(204).send("Server corriendo")
 });
 
 /*********************  FIN PLAZAS  ******************/
