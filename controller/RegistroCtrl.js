@@ -9,6 +9,7 @@ registroCtrl.listar = async() => {
 };
 
 registroCtrl.insertar = async(registro) => {
+    delete registro._id;
     return await registroDAO.create(registro);
 };
 
