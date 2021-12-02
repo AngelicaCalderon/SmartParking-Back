@@ -17,6 +17,7 @@ registroCtrl.actualizar = async(registro) => {
     return await registroDAO.findById(registro._id, registro);
 };
 
+
 registroCtrl.eliminar = async(id) => {
     await registroDAO.deleteOne({ _id: id });
 
