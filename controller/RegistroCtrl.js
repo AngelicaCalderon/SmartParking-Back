@@ -17,8 +17,20 @@ registroCtrl.insertar = async(registro) => {
 
 registroCtrl.actualizar = async(registro) => {
     registro.hora_salida = AsignarFecha();
-    TotalPagar();
-    return await registroDAO.findOneAndUpdate(registro._id, registro);
+    let parametros = await parametrosCtrl.listar();
+    console.log(parametros);
+    let tiempoParqueo = (Date.parse(registro.hora_salida) - Date.parse(registro.hora_ingreso)) / 60000;
+
+
+    if (registro.tipo_vehiculo == "Carro") {
+
+        registro.total_pagar = ((tiempoParqueo * parametros[0].tarifa_minuto_carro)).toString();
+    } else {
+        registro.total_pagar = ((tiempoParqueo * parametros[0].tarifa_minuto_moto)).toString();
+    }
+    console.log(registro.total_pagar + " $");
+    //TotalPagar(registro);
+    return await registroDAO.findByIdAndUpdate(registro._id, registro);
 
 };
 
@@ -30,25 +42,27 @@ registroCtrl.eliminar = async(id) => {
 
 function AsignarFecha() {
     let fecha = new Date();
+    console.log(fecha);
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
     let anio = fecha.getFullYear();
     let hora = fecha.getHours();
     let minutos = fecha.getMinutes();
     let fechaFinal = String(anio + "-" + mes + "-" + dia + " " + hora + ":" + minutos);
+
     return fechaFinal;
 }
 
 function TotalPagar(registro) {
     let parametros = parametrosCtrl.listar();
 
-    var tiempoParqueo = (Date.parse(this.registro.hora_salida) - Date.parse(this.registro.hora_ingreso)) / 60000;
+    var tiempoParqueo = (Date.parse(registro.hora_salida) - Date.parse(registro.hora_ingreso)) / 60000;
 
-    if (this.registro.tipo_vehiculo == "Carro") {
+    if (registro.tipo_vehiculo == "Carro") {
 
-        registro.total_pagar = (tiempoParqueo * parametros[0].tarifa_minuto_carro)
+        registro.total_pagar = ((tiempoParqueo * parametros[0].tarifa_minuto_carro)).toString();
     } else {
-        registro.total_pagar = (tiempoParqueo * parametros[0].tarifa_minuto_moto)
+        registro.total_pagar = ((tiempoParqueo * parametros[0].tarifa_minuto_moto)).toString();
     }
 
 }

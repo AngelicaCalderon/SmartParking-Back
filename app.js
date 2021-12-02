@@ -13,6 +13,7 @@ app.use(cors());
 /*********************  REGISTRO  **********************/
 
 app.get('/api/registro', async(request, response) => {
+    console.log("registro");
     let registros = await registroCtrl.listar();
     response.status(200).json(registros);
 });
@@ -129,5 +130,5 @@ app.delete('/api/parametros/:id', async(request, response) => {
 
 const PORT = process.env.PORT || 4000
 app.listen(PORT, () => {
-    console.log("servidor corriendo")
+    console.log("servidor corriendo" + PORT)
 });
